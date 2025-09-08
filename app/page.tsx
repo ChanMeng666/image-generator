@@ -6,6 +6,7 @@ import { Loader2, Download, Image as ImageIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import MondrianBackground from '@/components/MondrianBackground'
+import DeveloperShowcase from '@/components/DeveloperShowcase'
 
 export default function Home() {
   const [prompt, setPrompt] = useState('')
@@ -69,12 +70,25 @@ export default function Home() {
                 AI Image Generator
               </h1>
             </div>
-            <p className="text-center text-sm text-gray-500 mb-8">
-              Code & Crafted with💛by{' '}
-              <Link href="https://github.com/ChanMeng666/image-generator" className="text-indigo-600 hover:text-indigo-500">
-                Chan Meng
-              </Link>
-            </p>
+            <div className="flex items-center justify-center gap-2 mb-8">
+              <p className="text-center text-sm text-gray-500">
+                Code & Crafted with💛by
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-white border border-gray-200 p-1">
+                  <Image
+                    src="/chan_logo.svg"
+                    alt="Chan Meng Logo"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                </div>
+                <Link href="https://github.com/ChanMeng666/image-generator" className="text-indigo-600 hover:text-indigo-500 text-sm font-medium">
+                  Chan Meng
+                </Link>
+              </div>
+            </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -155,6 +169,9 @@ export default function Home() {
                 </Button>
               </div>
             )}
+            
+            {/* Developer Showcase */}
+            <DeveloperShowcase />
           </div>
         </div>
       </div>
