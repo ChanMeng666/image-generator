@@ -155,8 +155,8 @@ export default function Home() {
                   <Image
                     src={image}
                     alt="Generated image"
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
                 

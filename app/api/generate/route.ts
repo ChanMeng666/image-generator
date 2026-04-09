@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
-import Together from "together-ai";
-
-const together = new Together({ 
-  apiKey: process.env.TOGETHER_API_KEY 
-});
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 
 export async function POST(req: Request) {
   try {
@@ -16,17 +12,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const response = await together.images.create({
-      model: "black-forest-labs/FLUX.1-schnell-Free",
-      prompt: prompt,
-      width: 1024,
-      height: 768,
+    const { env } = getCloudflareContext();
+    const response = await env.AI.run('@cf/black-forest-labs/flux-1-schnell', {
+      prompt,
       steps: 4,
-      n: 1,
-      response_format: "b64_json"
     });
 
-    return NextResponse.json(response.data[0].b64_json);
+    return NextResponse.json(response.image);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
