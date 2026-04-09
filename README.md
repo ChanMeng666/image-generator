@@ -4,9 +4,9 @@
 
 # 🎨 AI Image Generator<br/><h3>Transform Your Ideas Into Stunning Visual Art</h3>
 
-An innovative AI-powered image generation platform that leverages cutting-edge FLUX.1 technology to transform text descriptions into high-quality images.<br/>
+An innovative AI-powered image generation platform that leverages Cloudflare Workers AI with FLUX.1 Schnell to transform text descriptions into high-quality images — completely **FREE** (100k requests/day).<br/>
 Supports real-time generation, instant downloads, and features a beautiful Mondrian-inspired UI design.<br/>
-One-click **FREE** deployment of your AI image generation platform.
+Deployed on Cloudflare Workers for global edge performance.
 
 [Live Demo][project-link] · [Documentation][docs] · [GitHub][github-link] · [Issues][github-issues-link]
 
@@ -19,7 +19,7 @@ One-click **FREE** deployment of your AI image generation platform.
 <!-- SHIELD GROUP -->
 
 [![][github-release-shield]][github-release-link]
-[![][vercel-shield]][vercel-link]
+[![][cloudflare-shield]][cloudflare-link]
 [![][github-action-test-shield]][github-action-test-link]<br/>
 [![][github-contributors-shield]][github-contributors-link]
 [![][github-forks-shield]][github-forks-link]
@@ -61,15 +61,15 @@ One-click **FREE** deployment of your AI image generation platform.
  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
  <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"/>
  <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
- <img src="https://img.shields.io/badge/Together%20AI-FF6B6B?style=for-the-badge&logo=openai&logoColor=white"/>
- <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white"/>
+ <img src="https://img.shields.io/badge/Cloudflare%20Workers%20AI-F38020?style=for-the-badge&logo=cloudflare&logoColor=white"/>
+ <img src="https://img.shields.io/badge/Cloudflare%20Workers-F38020?style=for-the-badge&logo=cloudflareworkers&logoColor=white"/>
 
 </div>
 
 </div>
 
 > [!IMPORTANT]
-> This project demonstrates modern AI integration with Next.js App Router, featuring real-time image generation powered by Together AI's FLUX.1-schnell model. It combines React 18 server components with TypeScript for type safety and Tailwind CSS for responsive design.
+> This project demonstrates modern AI integration with Next.js 15 App Router, featuring real-time image generation powered by Cloudflare Workers AI's FLUX.1 Schnell model (free, 100k requests/day). Deployed on Cloudflare Workers via the OpenNext adapter, with React 19, TypeScript, and Tailwind CSS.
 
 <details>
 <summary><kbd>📑 Table of Contents</kbd></summary>
@@ -119,13 +119,12 @@ One-click **FREE** deployment of your AI image generation platform.
 
 We are passionate developers creating the next generation of AI-powered creative tools. By adopting modern web technologies and cutting-edge AI models, we aim to provide users with powerful, intuitive, and accessible image generation capabilities.
 
-Whether you're a professional designer, digital artist, or creative enthusiast, this AI Image Generator will be your creative playground. The application leverages Together AI's FLUX.1-schnell model to transform text descriptions into stunning visual art.
+Whether you're a professional designer, digital artist, or creative enthusiast, this AI Image Generator will be your creative playground. The application leverages Cloudflare Workers AI's FLUX.1 Schnell model to transform text descriptions into stunning visual art — completely free with 100,000 requests per day.
 
 > [!NOTE]
 > - Node.js >= 18.0 required
-> - Together AI API key required for image generation
+> - Cloudflare account required (free tier is sufficient — no API key needed, Workers AI is built-in)
 > - Modern browser with JavaScript enabled
-> - Optional: Vercel account for deployment
 
 | [![][demo-shield-badge]][demo-link]   | No installation required! Visit our live demo to experience AI image generation firsthand. |
 | :------------------------------------ | :----------------------------------------------------------------------------------------- |
@@ -147,16 +146,17 @@ Whether you're a professional designer, digital artist, or creative enthusiast, 
 
 ### `1` AI-Powered Image Generation
 
-Experience state-of-the-art image generation using Together AI's FLUX.1-schnell model. Our platform delivers high-quality, creative visuals from simple text descriptions with impressive speed and accuracy.
+Experience state-of-the-art image generation using Cloudflare Workers AI's FLUX.1 Schnell model. Our platform delivers high-quality, creative visuals from simple text descriptions with impressive speed and accuracy — at zero cost.
 
 Key capabilities include:
-- 🚀 **Lightning Fast**: Generate 1024x768 images in seconds
-- 🎨 **High Quality**: FLUX.1-schnell model for superior results
+- 🚀 **Lightning Fast**: Generate images in seconds at the edge
+- 🎨 **High Quality**: FLUX.1 Schnell 12B parameter model for superior results
 - 💡 **Creative Freedom**: Transform any text into visual art
 - 🔄 **Real-time Processing**: Instant feedback and generation
+- 🆓 **Completely Free**: 100,000 requests/day on Cloudflare Workers AI free tier
 
 > [!TIP]
-> The FLUX.1-schnell model excels at understanding complex prompts and generating detailed, creative images across various styles and subjects.
+> The FLUX.1 Schnell model excels at understanding complex prompts and generating detailed, creative images across various styles and subjects. Running on Cloudflare's global edge network ensures low latency worldwide.
 
 [![][back-to-top]](#readme-top)
 
@@ -181,7 +181,7 @@ Beyond the core AI generation, this project includes:
 - [x] 🛡️ **Error Handling**: Comprehensive error management and user feedback
 - [x] 🔄 **Loading States**: Smooth loading animations and progress indicators
 - [x] 🎯 **TypeScript**: Full type safety throughout the application
-- [x] 🚀 **Next.js App Router**: Modern React architecture with server components
+- [x] 🚀 **Next.js 15 App Router**: Modern React 19 architecture with server components
 - [x] 🎨 **Custom UI Components**: Built with Radix UI primitives
 - [x] ⚡ **Optimized Performance**: Fast loading and efficient rendering
 
@@ -200,11 +200,11 @@ Beyond the core AI generation, this project includes:
     <tr>
       <td align="center" width="96">
         <img src="https://cdn.simpleicons.org/nextdotjs" width="48" height="48" alt="Next.js" />
-        <br>Next.js 14
+        <br>Next.js 15
       </td>
       <td align="center" width="96">
         <img src="https://cdn.simpleicons.org/react" width="48" height="48" alt="React" />
-        <br>React 18
+        <br>React 19
       </td>
       <td align="center" width="96">
         <img src="https://cdn.simpleicons.org/typescript" width="48" height="48" alt="TypeScript" />
@@ -215,38 +215,38 @@ Beyond the core AI generation, this project includes:
         <br>Tailwind CSS
       </td>
       <td align="center" width="96">
-        <img src="https://cdn.simpleicons.org/openai" width="48" height="48" alt="Together AI" />
-        <br>Together AI
+        <img src="https://cdn.simpleicons.org/cloudflare" width="48" height="48" alt="Cloudflare Workers AI" />
+        <br>Workers AI
       </td>
       <td align="center" width="96">
-        <img src="https://cdn.simpleicons.org/vercel" width="48" height="48" alt="Vercel" />
-        <br>Vercel
+        <img src="https://cdn.simpleicons.org/cloudflareworkers" width="48" height="48" alt="Cloudflare Workers" />
+        <br>CF Workers
       </td>
     </tr>
   </table>
 </div>
 
 **Frontend Stack:**
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript for complete type safety
 - **Styling**: Tailwind CSS with custom design system
 - **UI Components**: Radix UI primitives + Custom components
 - **Icons**: Lucide React icon library
 
 **AI & Backend:**
-- **AI Model**: Together AI FLUX.1-schnell-Free
-- **API**: Next.js API routes with edge runtime
+- **AI Model**: Cloudflare Workers AI — FLUX.1 Schnell (free, 100k req/day)
+- **API**: Next.js API routes via OpenNext adapter
+- **AI Binding**: Direct Workers AI binding (no external API key needed)
 - **Image Processing**: Base64 encoding for instant display
-- **Error Handling**: Comprehensive error boundaries
 
 **DevOps & Deployment:**
-- **Platform**: Vercel for seamless deployment
-- **Build System**: Next.js optimized build pipeline
-- **Environment**: Secure environment variable management
-- **Performance**: Automatic image optimization
+- **Platform**: Cloudflare Workers for global edge deployment
+- **Adapter**: @opennextjs/cloudflare for Next.js compatibility
+- **Build System**: OpenNext build pipeline + Wrangler CLI
+- **Performance**: Edge-first architecture with global CDN
 
 > [!TIP]
-> Each technology was carefully selected for optimal developer experience, performance, and maintainability in production environments.
+> Each technology was carefully selected for optimal developer experience, performance, and maintainability in production environments. The Cloudflare Workers AI integration eliminates the need for external API keys and provides generous free usage.
 
 ## 🏗️ Architecture
 
@@ -257,58 +257,70 @@ Beyond the core AI generation, this project includes:
 
 ```mermaid
 graph TB
-    subgraph "Frontend Layer"
-        A[Next.js App] --> B[React Components]
-        B --> C[Tailwind Styling]
-        C --> D[API Layer]
+    subgraph "User Browser"
+        A[Next.js 15 App - React 19] --> B[React Components]
+        B --> C[Tailwind CSS Styling]
+        B --> K[Text Input]
+        B --> L[Image Display]
+        B --> M[Download Feature]
     end
-    
-    subgraph "Backend Layer"
-        E[API Routes] --> F[Together AI Client]
-        F --> G[FLUX.1 Model]
+
+    subgraph "Cloudflare Workers"
+        D[OpenNext Adapter] --> E[Next.js API Routes]
+        E --> F[Workers AI Binding]
+        D --> G[Static Assets CDN]
     end
-    
-    subgraph "External Services"
-        H[Together AI API]
-        I[Vercel Platform]
-        J[Image Processing]
+
+    subgraph "Cloudflare Workers AI"
+        H["FLUX.1 Schnell (12B params)"]
     end
-    
-    D --> E
-    F --> H
-    G --> J
-    
-    subgraph "User Interface"
-        K[Text Input]
-        L[Image Display]
-        M[Download Feature]
-        N[Error Handling]
-    end
-    
-    A --> K
-    A --> L
-    A --> M
-    A --> N
+
+    K -->|POST /api/generate| D
+    F -->|"env.AI.run()"| H
+    H -->|Base64 Image| E
+    E -->|JSON Response| L
+
+    style H fill:#F38020,stroke:#F38020,color:#fff
+    style D fill:#F38020,stroke:#F38020,color:#fff
+```
+
+**Request Flow:**
+
+```mermaid
+sequenceDiagram
+    participant U as User Browser
+    participant W as Cloudflare Worker
+    participant AI as Workers AI (FLUX.1 Schnell)
+
+    U->>W: POST /api/generate {prompt}
+    W->>W: Validate prompt
+    W->>AI: env.AI.run("@cf/black-forest-labs/flux-1-schnell", {prompt, steps: 4})
+    AI-->>W: {image: "base64..."}
+    W-->>U: JSON Response (base64 image)
+    U->>U: Display image via data URI
 ```
 
 ### Component Structure
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── api/generate/      # Image generation API route
-│   ├── layout.tsx         # Root layout component
-│   ├── page.tsx           # Main application page
-│   └── globals.css        # Global styles
-├── components/            # Reusable UI components
-│   ├── ui/               # Base UI components (Button, etc.)
-│   └── MondrianBackground.tsx # Custom background component
-├── lib/                  # Utility libraries
-│   └── utils.ts          # Helper functions
-├── public/               # Static assets
-│   ├── logo.svg          # Application logo
-│   └── favicon.svg       # Favicon
-└── types.d.ts           # TypeScript definitions
+├── app/                        # Next.js 15 App Router
+│   ├── api/generate/           # Image generation API route (Workers AI)
+│   │   └── route.ts            # POST endpoint using env.AI binding
+│   ├── layout.tsx              # Root layout with Inter font
+│   ├── page.tsx                # Main application page (client component)
+│   └── globals.css             # Global styles + Tailwind directives
+├── components/                 # React components
+│   ├── ui/                     # Base UI components (Button, etc.)
+│   ├── MondrianBackground.tsx  # Geometric background component
+│   └── DeveloperShowcase.tsx   # Developer profile component
+├── lib/                        # Utility libraries
+│   └── utils.ts                # cn() helper for Tailwind class merging
+├── public/                     # Static assets (logo, favicon, etc.)
+├── wrangler.jsonc              # Cloudflare Workers configuration
+├── open-next.config.ts         # OpenNext Cloudflare adapter config
+├── cloudflare-env.d.ts         # Cloudflare bindings TypeScript types
+├── next.config.js              # Next.js config + OpenNext dev init
+└── package.json                # Dependencies and build scripts
 ```
 
 ## ⚡️ Performance
@@ -323,13 +335,13 @@ src/
 - 🔄 **Real-time** generation feedback
 
 **Performance Optimizations:**
-- 🎯 **Next.js Image Optimization**: Automatic WebP conversion and lazy loading
-- 📦 **Code Splitting**: Automatic bundle optimization
-- 🔄 **API Optimization**: Efficient Together AI integration
+- 🌍 **Edge Deployment**: Cloudflare Workers runs at 300+ locations worldwide
+- 📦 **Code Splitting**: Automatic bundle optimization via Next.js 15
+- 🔄 **Workers AI Binding**: Direct in-platform AI inference with zero network hop to external APIs
 - 🖼️ **Base64 Encoding**: Instant image display without additional requests
 
 > [!NOTE]
-> Performance metrics are continuously monitored in production environments.
+> Performance metrics are continuously monitored in production environments. Cloudflare Workers provides built-in analytics and logging.
 
 ## 🚀 Getting Started
 
@@ -341,7 +353,8 @@ src/
 - Node.js 18.0+ ([Download](https://nodejs.org/))
 - npm/yarn/pnpm package manager
 - Git ([Download](https://git-scm.com/))
-- Together AI API key ([Get yours here](https://together.ai/))
+- Cloudflare account ([Sign up free](https://dash.cloudflare.com/sign-up)) — no API key needed, Workers AI is built-in
+- Wrangler CLI (installed as project devDependency)
 
 ### Quick Installation
 
@@ -365,14 +378,11 @@ yarn install
 pnpm install
 ```
 
-**3. Environment Setup**
+**3. Login to Cloudflare**
 
 ```bash
-# Create environment file
-cp .env.example .env.local
-
-# Add your Together AI API key
-echo "TOGETHER_API_KEY=your_api_key_here" >> .env.local
+# Login to your Cloudflare account (interactive browser auth)
+npx wrangler login
 ```
 
 **4. Start Development**
@@ -383,32 +393,23 @@ npm run dev
 
 🎉 **Success!** Open [http://localhost:3000](http://localhost:3000) to start generating images.
 
-### Environment Setup
-
-Create `.env.local` file with the following variables:
-
-```bash
-# Together AI Configuration
-TOGETHER_API_KEY="your-together-ai-api-key"
-
-# Optional: Additional Configuration
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-```
-
 > [!TIP]
-> Get your Together AI API key from [https://together.ai/](https://together.ai/) - it's free to start!
+> No API key is needed! Cloudflare Workers AI is accessed directly via the AI binding configured in `wrangler.jsonc`. The free tier includes 100,000 AI requests per day.
 
 ### Development Mode
 
 ```bash
-# Start development server
+# Start development server (with Cloudflare bindings)
 npm run dev
+
+# Build and preview locally with Cloudflare Workers runtime
+npm run preview
 
 # Build for production
 npm run build
 
-# Start production server
-npm run start
+# Deploy to Cloudflare Workers
+npm run deploy
 
 # Run linting
 npm run lint
@@ -417,56 +418,78 @@ npm run lint
 ## 🛳 Deployment
 
 > [!IMPORTANT]
-> Cloud deployment is recommended for production applications.
+> This project is deployed on Cloudflare Workers using the OpenNext adapter. No external API keys are required.
 
-### `A` Cloud Deployment
+### `A` Cloudflare Workers Deployment (Recommended)
 
-**Vercel (Recommended)**
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FChanMeng666%2Fimage-generator)
-
-**Manual Deployment:**
+**One-Command Deploy:**
 
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy to production
-vercel --prod
+# Build and deploy to Cloudflare Workers
+npm run deploy
 ```
 
-**Other Platforms:**
-
-<div align="center">
-
-|           Deploy with Netlify            |                     Deploy with Railway                      |
-| :-------------------------------------: | :---------------------------------------------------------: |
-| [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ChanMeng666/image-generator) | [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/ChanMeng666/image-generator) |
-
-</div>
-
-### `B` Docker Deployment
+**Step-by-Step Deployment:**
 
 ```bash
-# Build Docker image
-docker build -t ai-image-generator .
+# 1. Login to Cloudflare
+npx wrangler login
 
-# Run container
-docker run -p 3000:3000 -e TOGETHER_API_KEY=your_key ai-image-generator
+# 2. Build the Next.js app + OpenNext bundle
+npx opennextjs-cloudflare build
+
+# 3. Deploy to Cloudflare Workers
+npx opennextjs-cloudflare deploy
 ```
 
-### `C` Environment Variables
+Your app will be available at `https://image-generator.<your-subdomain>.workers.dev`.
 
-> [!WARNING]
-> Never commit sensitive environment variables to version control.
+### `B` Deployment Architecture
 
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `TOGETHER_API_KEY` | Together AI API key for image generation | ✅ | `sk-xxxxxxxxxxxxx` |
-| `NEXT_PUBLIC_APP_URL` | Application URL for metadata | 🔶 | `https://yourdomain.com` |
+```mermaid
+graph LR
+    subgraph "Build Pipeline"
+        A[Next.js Build] --> B[OpenNext Adapter]
+        B --> C[Worker Bundle]
+        B --> D[Static Assets]
+    end
+
+    subgraph "Cloudflare Edge Network"
+        E[Workers Runtime]
+        F[Static Asset CDN]
+        G[Workers AI]
+    end
+
+    C --> E
+    D --> F
+    E --> G
+
+    style E fill:#F38020,stroke:#F38020,color:#fff
+    style F fill:#F38020,stroke:#F38020,color:#fff
+    style G fill:#F38020,stroke:#F38020,color:#fff
+```
+
+### `C` Configuration
 
 > [!NOTE]
-> ✅ Required, 🔶 Optional
+> No external API keys or secrets are needed. Workers AI is accessed via a built-in binding.
+
+| File | Purpose |
+|------|---------|
+| `wrangler.jsonc` | Cloudflare Workers config (account, AI binding, assets) |
+| `open-next.config.ts` | OpenNext adapter configuration |
+| `next.config.js` | Next.js config with OpenNext dev integration |
+
+**Key `wrangler.jsonc` settings:**
+
+```jsonc
+{
+  "name": "image-generator",
+  "main": ".open-next/worker.js",
+  "compatibility_flags": ["nodejs_compat"],
+  "ai": { "binding": "AI" }  // Workers AI binding — no API key needed
+}
+```
 
 ## 📖 Usage Guide
 
@@ -491,10 +514,8 @@ Content-Type: application/json
   "prompt": "A beautiful sunset over mountains"
 }
 
-# Response
-{
-  "b64_json": "base64-encoded-image-data"
-}
+# Response (JSON string — base64-encoded image)
+"iVBORw0KGgoAAAANSUhEUgAA..."
 ```
 
 **Example Usage:**
@@ -514,6 +535,20 @@ const generateImage = async (prompt) => {
 };
 ```
 
+**Server-side implementation** (via Cloudflare Workers AI binding):
+
+```typescript
+// app/api/generate/route.ts
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+
+const { env } = getCloudflareContext();
+const response = await env.AI.run('@cf/black-forest-labs/flux-1-schnell', {
+  prompt,
+  steps: 4,  // 1-8, higher = better quality
+});
+// response.image contains the base64-encoded image
+```
+
 **Error Responses:**
 
 | Status Code | Description | Response |
@@ -527,8 +562,9 @@ const generateImage = async (prompt) => {
 
 | Service | Purpose | Status | Documentation |
 |---------|---------|--------|---------------|
-| **Together AI** | AI Image Generation | ✅ Active | [API Docs](https://docs.together.ai/) |
-| **Vercel** | Hosting & Deployment | ✅ Active | [Setup Guide](https://vercel.com/docs) |
+| **Cloudflare Workers AI** | AI Image Generation (FLUX.1 Schnell) | ✅ Active | [Workers AI Docs](https://developers.cloudflare.com/workers-ai/) |
+| **Cloudflare Workers** | Edge Deployment & Hosting | ✅ Active | [Workers Docs](https://developers.cloudflare.com/workers/) |
+| **OpenNext** | Next.js → Cloudflare Adapter | ✅ Active | [OpenNext Docs](https://opennext.js.org/cloudflare) |
 | **Tailwind CSS** | Styling System | ✅ Active | [Documentation](https://tailwindcss.com/) |
 | **Radix UI** | UI Components | ✅ Active | [Component Docs](https://www.radix-ui.com/) |
 
@@ -544,9 +580,8 @@ git clone https://github.com/ChanMeng666/image-generator.git
 cd image-generator
 npm install
 
-# Configure environment
-cp .env.example .env.local
-# Add your TOGETHER_API_KEY
+# Login to Cloudflare (for Workers AI binding in dev)
+npx wrangler login
 
 # Start development
 npm run dev
@@ -663,9 +698,9 @@ This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENS
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
 
 <!-- Project Links -->
-[project-link]: https://image-generator-sable-tau.vercel.app/
+[project-link]: https://image-generator.chanmeng-dev.workers.dev/
 [docs]: https://github.com/ChanMeng666/image-generator#readme
-[demo-link]: https://image-generator-sable-tau.vercel.app/
+[demo-link]: https://image-generator.chanmeng-dev.workers.dev/
 [github-link]: https://github.com/ChanMeng666/image-generator
 
 <!-- GitHub Links -->
@@ -679,8 +714,8 @@ This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENS
 
 <!-- Shield Badges -->
 [github-release-shield]: https://img.shields.io/github/v/release/ChanMeng666/image-generator?color=369eff&labelColor=black&logo=github&style=flat-square
-[vercel-shield]: https://img.shields.io/badge/vercel-online-55b467?labelColor=black&logo=vercel&style=flat-square
-[vercel-link]: https://image-generator-sable-tau.vercel.app/
+[cloudflare-shield]: https://img.shields.io/badge/cloudflare-online-55b467?labelColor=black&logo=cloudflare&style=flat-square
+[cloudflare-link]: https://image-generator.chanmeng-dev.workers.dev/
 [github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/ChanMeng666/image-generator/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-action-test-link]: https://github.com/ChanMeng666/image-generator/actions
 [github-contributors-shield]: https://img.shields.io/github/contributors/ChanMeng666/image-generator?color=c4f042&labelColor=black&style=flat-square
@@ -691,7 +726,7 @@ This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENS
 [pr-welcome-shield]: https://img.shields.io/badge/🤝_PRs_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 
 <!-- Badge Variants -->
-[demo-shield-badge]: https://img.shields.io/badge/TRY%20DEMO-ONLINE-55b467?labelColor=black&logo=vercel&style=for-the-badge
+[demo-shield-badge]: https://img.shields.io/badge/TRY%20DEMO-ONLINE-55b467?labelColor=black&logo=cloudflare&style=for-the-badge
 
 <!-- Social Share Links -->
 [share-x-link]: https://x.com/intent/tweet?hashtags=AI,ImageGeneration,NextJS&text=Check%20out%20this%20amazing%20AI%20Image%20Generator%20https%3A%2F%2Fgithub.com%2FChanMeng666%2Fimage-generator
