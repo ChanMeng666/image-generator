@@ -8,7 +8,9 @@
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "lint": "next lint"
+    "lint": "next lint",
+    "stripe:listen": "stripe listen --forward-to http://localhost:3000/api/stripe/webhook",
+    "stripe:trigger": "stripe trigger checkout.session.completed"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.2.0-beta.1",

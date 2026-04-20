@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe";
+import { getStripe, getStripeWebhookSecret } from "@/lib/stripe";
 import { addCredits } from "@/lib/credits";
 import { errors } from "@/lib/errors";
 
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     }
 
     const stripe = getStripe();
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+    const webhookSecret = getStripeWebhookSecret();
 
     let event;
     try {

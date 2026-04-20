@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { getStripe } from "@/lib/stripe";
+import { getStripe, getStripeMode } from "@/lib/stripe";
 import { getPackageById } from "@/lib/credit-packages";
 import { getDb } from "@/lib/db";
 import { stripeCustomers } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { errors } from "@/lib/errors";
 
 export async function POST(req: Request) {
@@ -21,14 +21,20 @@ export async function POST(req: Request) {
     }
 
     const stripe = getStripe();
+    const mode = getStripeMode();
     const db = getDb();
 
-    // Get or create Stripe customer
+    // One Stripe customer per (user, mode) — test and live customers are distinct in Stripe.
     let customerId: string;
     const existing = await db
       .select()
       .from(stripeCustomers)
-      .where(eq(stripeCustomers.userId, session.user.id))
+      .where(
+        and(
+          eq(stripeCustomers.userId, session.user.id),
+          eq(stripeCustomers.mode, mode),
+        ),
+      )
       .limit(1);
 
     if (existing[0]) {
@@ -36,16 +42,16 @@ export async function POST(req: Request) {
     } else {
       const customer = await stripe.customers.create({
         email: session.user.email,
-        metadata: { userId: session.user.id },
+        metadata: { userId: session.user.id, mode },
       });
       await db.insert(stripeCustomers).values({
         userId: session.user.id,
+        mode,
         stripeCustomerId: customer.id,
       });
       customerId = customer.id;
     }
 
-    // Create checkout session
     const origin = req.headers.get("origin") || process.env.BETTER_AUTH_URL || "";
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,

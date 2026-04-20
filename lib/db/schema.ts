@@ -5,6 +5,7 @@ import {
   timestamp,
   integer,
   serial,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 // ========== Business tables only ==========
@@ -42,9 +43,16 @@ export const generatedImages = pgTable("generated_images", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const stripeCustomers = pgTable("stripe_customers", {
-  id: serial("id").primaryKey(),
-  userId: text("user_id").notNull().unique(),
-  stripeCustomerId: text("stripe_customer_id").notNull().unique(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+export const stripeCustomers = pgTable(
+  "stripe_customers",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id").notNull(),
+    mode: text("mode").notNull(), // 'test' | 'live'
+    stripeCustomerId: text("stripe_customer_id").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => ({
+    userMode: uniqueIndex("stripe_customers_user_mode_unique").on(t.userId, t.mode),
+  }),
+);
