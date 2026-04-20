@@ -1,30 +1,37 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
+
 module.exports = {
+  darkMode: ["class"],
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: '#3B82F6',
-          hover: '#2563EB',
+        gray: {
+          ...colors.neutral,
         },
-        secondary: {
-          DEFAULT: '#10B981',
-          hover: '#059669',
+      },
+      transitionDuration: {
+        "1200": "1200ms",
+        "1500": "1500ms",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
         },
-        accent: {
-          DEFAULT: '#F59E0B',
-          hover: '#D97706',
-        },
+      },
+      animation: {
+        shimmer: "shimmer 2s ease-in-out infinite",
       },
     },
   },
-  plugins: [],
-}
+  plugins: [require("tailwindcss-animate")],
+};

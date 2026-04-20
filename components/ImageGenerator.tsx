@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Loader2, Download, Image as ImageIcon } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import MondrianBackground from "@/components/MondrianBackground";
-import DeveloperShowcase from "@/components/DeveloperShowcase";
+import { Download, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { PromptBox } from "@/components/ui/PromptBox";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { ImageCard, ImageCardSkeleton } from "@/components/ImageCard";
+import { notifyCreditsUpdated } from "@/components/CreditBalance";
 
 interface GenerateResult {
   id: string;
@@ -15,17 +16,77 @@ interface GenerateResult {
   creditsRemaining: number;
 }
 
+interface RecentImage {
+  id: string;
+  prompt: string;
+  cloudinaryUrl: string;
+  createdAt: string;
+}
+
+function getErrorMessage(err: { code: string; detail?: Record<string, unknown> }) {
+  switch (err.code) {
+    case "INSUFFICIENT_CREDITS":
+      return `Not enough credits. Balance: ${err.detail?.balance ?? 0}`;
+    case "PROMPT_REQUIRED":
+      return "Please enter a prompt.";
+    case "GENERATION_FAILED":
+      return "Image generation failed. Try again.";
+    case "UPLOAD_FAILED":
+      return "Failed to save image. Try again.";
+    case "UNAUTHORIZED":
+      return "Please sign in to generate images.";
+    case "NETWORK_ERROR":
+      return "Network error. Check your connection.";
+    default:
+      return "Something went wrong. Please try again.";
+  }
+}
+
+async function downloadUrlAsBlob(url: string, filename: string) {
+  const res = await fetch(url, { mode: "cors" });
+  const blob = await res.blob();
+  const blobUrl = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.download = filename;
+  a.href = blobUrl;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(blobUrl);
+}
+
 export default function ImageGenerator() {
   const [prompt, setPrompt] = useState("");
   const [result, setResult] = useState<GenerateResult | null>(null);
+  const [imageReady, setImageReady] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<{ code: string; detail?: Record<string, unknown> } | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const [recent, setRecent] = useState<RecentImage[] | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const fetchRecent = useCallback(async () => {
+    try {
+      const res = await fetch("/api/images?page=1");
+      if (res.ok) {
+        const data = await res.json();
+        setRecent((data.images ?? []).slice(0, 8));
+      } else {
+        setRecent([]);
+      }
+    } catch {
+      setRecent([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRecent();
+  }, [fetchRecent]);
+
+  const handleGenerate = async () => {
+    if (!prompt.trim() || loading) return;
     setLoading(true);
-    setError(null);
+    setImageReady(false);
 
+    const toastId = toast.loading("Generating...");
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -36,187 +97,149 @@ export default function ImageGenerator() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || { code: "UNKNOWN_ERROR" });
+        const msg = getErrorMessage(data.error ?? { code: "UNKNOWN_ERROR" });
+        toast.error(msg, { id: toastId });
         return;
       }
 
       setResult(data);
+      toast.success("Generated", { id: toastId });
+      notifyCreditsUpdated(data.creditsRemaining);
+      fetchRecent();
     } catch {
-      setError({ code: "NETWORK_ERROR" });
+      toast.error(getErrorMessage({ code: "NETWORK_ERROR" }), { id: toastId });
     } finally {
       setLoading(false);
     }
   };
 
   const handleDownload = async () => {
-    if (!result?.url) return;
+    if (!result?.url || downloading) return;
+    setDownloading(true);
+    const toastId = toast.loading("Downloading...");
     try {
-      const response = await fetch(result.url);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `generated-${result.id}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      await downloadUrlAsBlob(result.url, `${result.id}.png`);
+      toast.success("Downloaded", { id: toastId });
     } catch {
-      // fallback: open in new tab
+      toast.error("Download failed", { id: toastId });
       window.open(result.url, "_blank");
-    }
-  };
-
-  const getErrorMessage = (err: { code: string; detail?: Record<string, unknown> }) => {
-    switch (err.code) {
-      case "INSUFFICIENT_CREDITS":
-        return `Not enough credits. Balance: ${err.detail?.balance ?? 0}`;
-      case "PROMPT_REQUIRED":
-        return "Please enter a prompt.";
-      case "GENERATION_FAILED":
-        return "Image generation failed. Please try again.";
-      case "UPLOAD_FAILED":
-        return "Failed to save image. Please try again.";
-      default:
-        return "An unexpected error occurred.";
+    } finally {
+      setDownloading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
-      <MondrianBackground />
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <Image
-                src="/logo.svg"
-                alt="AI Image Generator Logo"
-                width={200}
-                height={200}
-                className="h-10 w-10"
-              />
-              <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-2">
-                AI Image Generator
-              </h1>
-            </div>
-            <div className="flex items-center justify-center gap-2 mb-8">
-              <p className="text-center text-sm text-gray-500">
-                Code & Crafted with💛by
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-white border border-gray-200 p-1">
-                  <Image
-                    src="/chan_logo.svg"
-                    alt="Chan Meng Logo"
-                    width={16}
-                    height={16}
-                    className="w-4 h-4"
-                  />
-                </div>
-                <Link
-                  href="https://github.com/ChanMeng666/image-generator"
-                  className="text-indigo-600 hover:text-indigo-500 text-sm font-medium"
-                >
-                  Chan Meng
-                </Link>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="prompt"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Image Description
-                </label>
-                <div className="mt-1">
-                  <textarea
-                    id="prompt"
-                    name="prompt"
-                    rows={4}
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Enter your image description here..."
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Button
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  type="submit"
-                  disabled={loading || !prompt.trim()}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <ImageIcon className="-ml-1 mr-3 h-5 w-5" />
-                      Generate Image (1 Credit)
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-
-            {error && (
-              <div className="mt-4 bg-red-50 border border-red-200 rounded-md p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg
-                      className="h-5 w-5 text-red-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-sm text-red-700">
-                      <p>{getErrorMessage(error)}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {result && (
-              <div className="mt-8 space-y-4">
-                <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg">
-                  <Image
-                    src={result.url}
-                    alt="Generated image"
-                    fill
-                    style={{ objectFit: "cover" }}
-                    unoptimized
-                  />
-                </div>
-
-                <Button
-                  onClick={handleDownload}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  <Download className="-ml-1 mr-3 h-5 w-5" />
-                  Download Image
-                </Button>
-              </div>
-            )}
-
-            <DeveloperShowcase />
-          </div>
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 flex flex-col flex-1 pb-12">
+      {/* Hero */}
+      <section className="flex flex-col items-center text-center py-[12vh] sm:py-[15vh]">
+        <h1 className="text-4xl sm:text-5xl font-medium text-black animate-in fade-in slide-in-from-bottom-3 duration-1000 ease-in-out">
+          AI Image Generator
+        </h1>
+        <p className="mt-3 text-gray-500 text-sm sm:text-base animate-in fade-in slide-in-from-bottom-3 duration-1000 ease-in-out">
+          Turn any prompt into an image.{" "}
+          <span className="font-mono text-gray-700">:1 credit = 1 image:</span>
+        </p>
+        <div className="w-full max-w-xl mt-10 animate-in fade-in slide-in-from-bottom-4 duration-1200 ease-in-out">
+          <PromptBox
+            value={prompt}
+            onChange={setPrompt}
+            onSubmit={handleGenerate}
+            loading={loading}
+            placeholder="a cyberpunk fox at dusk"
+            maxLength={500}
+            autoFocus
+          />
         </div>
-      </div>
+      </section>
+
+      {/* Result */}
+      {result && (
+        <section className="w-full max-w-xl mx-auto mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="ring-1 ring-gray-200 bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="relative aspect-square bg-gray-100">
+              {!imageReady && (
+                <Skeleton className="absolute inset-0 rounded-none" />
+              )}
+              <Image
+                src={result.url}
+                alt={result.prompt}
+                fill
+                sizes="(max-width: 768px) 100vw, 600px"
+                className={
+                  imageReady ? "object-cover opacity-100 transition-opacity duration-500" : "object-cover opacity-0"
+                }
+                unoptimized
+                onLoad={() => setImageReady(true)}
+                priority
+              />
+            </div>
+            <div className="flex items-center gap-3 p-3">
+              <p
+                className="font-mono text-sm text-gray-900 truncate flex-1"
+                title={result.prompt}
+              >
+                :{result.prompt}:
+              </p>
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={downloading}
+                className="w-9 h-9 flex items-center justify-center rounded-lg ring-1 ring-gray-200 bg-white hover:bg-gray-50 shadow-sm transition-colors disabled:opacity-60"
+              >
+                <span className="sr-only">Download</span>
+                {downloading ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Download size={16} />
+                )}
+              </button>
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-2 text-center font-mono">
+            :1 credit used • {result.creditsRemaining} left:
+          </p>
+        </section>
+      )}
+
+      {/* Recent grid */}
+      <section className="w-full">
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-sm font-medium text-black">
+            Your recent generations
+          </h2>
+          {recent && recent.length > 0 && (
+            <span className="text-xs text-gray-500 font-mono">
+              :{recent.length} shown:
+            </span>
+          )}
+        </div>
+
+        {recent === null ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ImageCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : recent.length === 0 ? (
+          <div className="ring-1 ring-gray-200 bg-white rounded-xl p-8 text-center">
+            <p className="text-sm text-gray-500">
+              Your generations will appear here. Try a prompt above.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 animate-in fade-in duration-700">
+            {recent.map((img) => (
+              <ImageCard
+                key={img.id}
+                id={img.id}
+                url={img.cloudinaryUrl}
+                prompt={img.prompt}
+                createdAt={img.createdAt}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

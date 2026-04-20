@@ -1,15 +1,43 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
-import { LogOut, ImageIcon, CreditCard, LayoutGrid } from "lucide-react";
+import { LogOut } from "lucide-react";
 import CreditBalance from "@/components/CreditBalance";
+import { cn } from "@/lib/utils";
+
+const NAV_LINKS = [
+  { href: "/", label: "Generate", authOnly: true },
+  { href: "/gallery", label: "Gallery", authOnly: false },
+  { href: "/images", label: "My Images", authOnly: true },
+  { href: "/credits", label: "Credits", authOnly: true },
+];
+
+function SparkIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="2"
+      stroke="currentColor"
+      width="20"
+      height="20"
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+      />
+    </svg>
+  );
+}
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
+  const pathname = usePathname();
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -18,68 +46,75 @@ export default function Navbar() {
     router.refresh();
   };
 
-  if (!session) return null;
+  const isAuthed = !!session?.user;
+  const links = NAV_LINKS.filter((l) => !l.authOnly || isAuthed);
 
   return (
-    <nav className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-14 items-center">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src="/logo.svg"
-                alt="Logo"
-                width={28}
-                height={28}
-                className="h-7 w-7"
-              />
-              <span className="font-bold text-gray-900 hidden sm:inline">
-                AI Image Generator
-              </span>
-            </Link>
-            <div className="flex items-center gap-1">
-              <Link href="/">
-                <Button variant="ghost" size="sm" className="gap-1.5">
-                  <ImageIcon className="h-4 w-4" />
-                  <span className="hidden sm:inline">Generate</span>
-                </Button>
+    <header className="top-0 sticky z-30 w-full bg-gray-100/95 backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-1000 ease-in-out">
+      <div className="max-w-5xl mx-auto h-14 flex flex-row flex-nowrap items-center justify-between px-4 sm:px-6">
+        <div className="flex items-center gap-x-4 sm:gap-x-6 min-w-0">
+          <Link
+            href={isAuthed ? "/" : "/gallery"}
+            className="flex items-center gap-x-1.5 text-black text-base font-medium leading-none rounded-lg shrink-0"
+          >
+            <SparkIcon />
+            <span className="hidden xs:inline sm:inline">image-gen</span>
+          </Link>
+          <nav className="flex items-center gap-x-0.5 min-w-0">
+            {links.map((link) => {
+              const active =
+                pathname === link.href ||
+                (link.href !== "/" && pathname.startsWith(link.href));
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "px-2.5 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap",
+                    active
+                      ? "text-black bg-white ring-1 ring-gray-200"
+                      : "text-gray-600 hover:text-black hover:bg-gray-200/60"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-x-2">
+          {isAuthed ? (
+            <>
+              <CreditBalance />
+              <button
+                type="button"
+                onClick={handleSignOut}
+                title="Sign out"
+                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 hover:text-black hover:bg-gray-200/60 transition-colors"
+              >
+                <span className="sr-only">Sign out</span>
+                <LogOut size={16} />
+              </button>
+            </>
+          ) : isPending ? null : (
+            <>
+              <Link
+                href="/login"
+                className="px-3 py-1.5 text-sm text-gray-700 hover:text-black rounded-lg transition-colors"
+              >
+                Sign in
               </Link>
-              <Link href="/images">
-                <Button variant="ghost" size="sm" className="gap-1.5">
-                  <LayoutGrid className="h-4 w-4" />
-                  <span className="hidden sm:inline">My Images</span>
-                </Button>
+              <Link
+                href="/register"
+                className="px-3 py-1.5 text-sm bg-black text-white hover:bg-black/90 rounded-lg transition-colors"
+              >
+                Sign up
               </Link>
-              <Link href="/gallery">
-                <Button variant="ghost" size="sm" className="gap-1.5">
-                  <LayoutGrid className="h-4 w-4" />
-                  <span className="hidden sm:inline">Gallery</span>
-                </Button>
-              </Link>
-              <Link href="/credits">
-                <Button variant="ghost" size="sm" className="gap-1.5">
-                  <CreditCard className="h-4 w-4" />
-                  <span className="hidden sm:inline">Credits</span>
-                </Button>
-              </Link>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <CreditBalance />
-            <span className="text-sm text-gray-600 hidden md:inline">
-              {session.user.name || session.user.email}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSignOut}
-              title="Sign Out"
-            >
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
+            </>
+          )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 }
