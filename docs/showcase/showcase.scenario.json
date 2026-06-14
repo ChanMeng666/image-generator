@@ -1,0 +1,60 @@
+{
+  "project": "image-generator",
+  "baseUrl": "https://image-generator.chanmeng-dev.workers.dev",
+  "outDir": "docs/showcase",
+
+  "viewports": {
+    "desktop": { "width": 1280, "height": 800, "deviceScaleFactor": 2 },
+    "mobile":  { "width": 390,  "height": 844, "deviceScaleFactor": 3, "isMobile": true }
+  },
+
+  "loginWall": true,
+  "reducedMotion": "reduce",
+
+  "setup": [],
+
+  "pages": [
+    {
+      "label": "gallery",
+      "url": "/gallery",
+      "viewport": "desktop",
+      "fullPage": false,
+      "before": [
+        { "action": "wait", "ms": 2500 }
+      ]
+    },
+    {
+      "label": "login",
+      "url": "/login",
+      "viewport": "desktop",
+      "fullPage": false,
+      "before": [
+        { "action": "wait", "ms": 1500 }
+      ]
+    },
+    {
+      "label": "mobile-gallery",
+      "url": "/gallery",
+      "viewport": "mobile",
+      "fullPage": false,
+      "before": [
+        { "action": "wait", "ms": 2500 }
+      ]
+    }
+  ],
+
+  "demo": {
+    "size": { "width": 1280, "height": 720 },
+    "stepPauseMs": 400,
+    "steps": [
+      { "action": "goto", "url": "/login", "timeoutMs": 15000 },
+      { "action": "wait", "ms": 1800 },
+      { "action": "goto", "url": "/gallery", "timeoutMs": 15000 },
+      { "action": "wait", "ms": 2500 },
+      { "action": "scroll", "by": 400 },
+      { "action": "wait", "ms": 1800 },
+      { "action": "scroll", "by": 450 },
+      { "action": "wait", "ms": 1600 }
+    ]
+  }
+}
