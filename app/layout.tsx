@@ -8,11 +8,33 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://image-generator.chanmeng-dev.workers.dev"),
   title: "AI Image Generator",
   description:
     "Turn your prompts into images in seconds. Pay per generation, keep what you create.",
   icons: {
     icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "AI Image Generator",
+    description: "Turn your prompts into images in seconds.",
+    type: "website",
+    siteName: "AI Image Generator",
+    url: "https://image-generator.chanmeng-dev.workers.dev",
+    images: [
+      {
+        url: "/og-cover.png",
+        width: 1200,
+        height: 630,
+        alt: "AI Image Generator — turn prompts into images in seconds",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Image Generator",
+    description: "Turn your prompts into images in seconds.",
+    images: ["/og-cover.png"],
   },
 };
 
